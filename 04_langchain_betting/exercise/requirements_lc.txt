@@ -1,0 +1,15 @@
+# WE6 · Notebook 04 — LangChain agents and the Intergalactic Football betting desk.
+# Versions are left loose except where a major version genuinely matters.
+
+langchain~=1.2            # create_agent lives here
+langchain-classic         # the 2022 ReAct AgentExecutor, for the harness comparison
+langchain-core
+langchain-openai          # the OpenRouter client
+langchain-community       # DuckDuckGo and Wikipedia tools
+langchain-mcp-adapters    # turns an MCP server's tools into LangChain tools
+mcp                       # the MCP SDK, for our own tiny server
+openai
+ipywidgets>=7.6
+numpy>=1.24
+ddgs                      # DuckDuckGo search backend
+wikipedia
