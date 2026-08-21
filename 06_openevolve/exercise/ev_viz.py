@@ -189,50 +189,19 @@ def sample_rule_diagram():
 
 
 def problem_and_search(data):
-    """The dataset on the left; three ways of searching a FIXED hyperparameter space on the right."""
-    import numpy as np
+    """The dataset: three interleaved spiral arms, the classification problem itself."""
     plt = _mpl()
-    fig = plt.figure(figsize=(10, 4.3))
-    gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.3], wspace=0.4)
-
-    ax0 = fig.add_subplot(gs[0])
+    fig, ax = plt.subplots(figsize=(5, 4.3))
     X, y = data.X_train.numpy(), data.y_train.numpy()
     for c in range(3):
         m = y == c
-        ax0.scatter(X[m, 0], X[m, 1], s=7, c=CLASS_COLORS[c], label=f"class {c}", alpha=.75)
-    ax0.set_title("The data: three interleaved arms", fontsize=9.5)
-    ax0.set_xlabel("sensor 1 (standardised)")
-    ax0.set_ylabel("sensor 2 (standardised)")
-    ax0.legend(frameon=False, fontsize=7.5, loc="upper right")
-    ax0.set_aspect("equal")
-
-    rng = np.random.default_rng(0)
-    inner = gs[1].subgridspec(1, 3, wspace=0.15)
-    grid_x, grid_y = np.meshgrid(np.linspace(.15, .85, 4), np.linspace(.15, .85, 4))
-    strategies = [
-        ("by hand", rng.uniform(0.15, 0.85, (6, 2)), MUTE),
-        ("grid search", np.stack([grid_x.ravel(), grid_y.ravel()], 1), ACC2),
-        ("optuna", np.clip(rng.normal(0.72, 0.09, (24, 2)), 0.04, 0.96), ACC),
-    ]
-    for i, (name, pts, colour) in enumerate(strategies):
-        axi = fig.add_subplot(inner[i])
-        axi.scatter(pts[:, 0], pts[:, 1], s=13, c=colour, alpha=.8)
-        axi.set_xlim(0, 1)
-        axi.set_ylim(0, 1)
-        axi.set_xticks([])
-        axi.set_yticks([])
-        for spine in axi.spines.values():
-            spine.set_edgecolor("#d7d9e6")
-        axi.set_title(name, fontsize=9, color=INK)
-        if i == 0:
-            axi.set_ylabel("width", fontsize=7.5, color=MUTE)
-        axi.set_xlabel("learning rate", fontsize=7.5, color=MUTE)
-
-    fig.text(0.685, 0.955, "Searching a FIXED hyperparameter space", fontsize=10.5,
-             fontweight="bold", color=INK, ha="center")
-    fig.text(0.685, 0.02, "same architecture family in all three, only the numbers move",
-             fontsize=8.5, color=MUTE, ha="center", style="italic")
-    plt.tight_layout(rect=[0, 0.05, 1, 0.91])
+        ax.scatter(X[m, 0], X[m, 1], s=7, c=CLASS_COLORS[c], label=f"class {c}", alpha=.75)
+    ax.set_title("The data: three interleaved arms", fontsize=9.5)
+    ax.set_xlabel("sensor 1 (standardised)")
+    ax.set_ylabel("sensor 2 (standardised)")
+    ax.legend(frameon=False, fontsize=7.5, loc="upper right")
+    ax.set_aspect("equal")
+    plt.tight_layout()
     plt.show()
 
 
