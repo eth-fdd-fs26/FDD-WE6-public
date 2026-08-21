@@ -1,0 +1,8 @@
+# WE6 · Mini-Evolve: an evolutionary coding agent in forty lines.
+# Colab already ships torch, numpy and matplotlib; these are pinned loosely for local runs.
+
+torch>=2.0            # the candidate networks and the frozen training loop
+numpy>=1.24
+matplotlib>=3.7
+openai>=1.40          # the OpenRouter client — the mutation operator is one chat call
+ipywidgets>=7.6

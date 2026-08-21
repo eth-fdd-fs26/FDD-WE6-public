@@ -7,6 +7,7 @@ Public copies of the weekend's hands-on notebooks. Everything here is meant to b
 |---|---|---|---|
 | 03 | `03_agentic_ai_sweng/03_scoutai_workshop_student.ipynb` | ScoutAI — the same competitor brief eight times, one agentic concept at a time: tools, RAG, skills, memory, LangGraph, MCP, A2A. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eth-fdd-fs26/FDD-WE6-public/blob/main/03_agentic_ai_sweng/03_scoutai_workshop_student.ipynb) |
 | 04 | `04_langchain_betting/04_langchain_agents_student.ipynb` | A betting desk for a sport nobody has ever played — LangChain agents, an MCP server you write yourself, and the tools/harness/prompt dials that decide what an agent actually does. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eth-fdd-fs26/FDD-WE6-public/blob/main/04_langchain_betting/04_langchain_agents_student.ipynb) |
+| 06 | `06_openevolve/06_mini_evolve_student.ipynb` | Mini-Evolve — build an evolutionary coding agent from scratch: sample, mutate, evaluate, store, and watch a nine-parameter seed model evolve against a spiral classification problem. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eth-fdd-fs26/FDD-WE6-public/blob/main/06_openevolve/06_mini_evolve_student.ipynb) |
 
 ## What you need
 
@@ -26,3 +27,13 @@ Notebook 04 ships with a small package it clones from this repo on its first cel
 
 Neither `galactic/` nor `lc_viz.py` is worth reading before the session — between them they
 hold the quiz answers and the sport, and reading them costs you most of the exercise.
+
+## About `06_openevolve/exercise/`
+
+Notebook 06 clones a small package from this repo on its first cell:
+
+- `minievolve/` — the frozen data and training protocol, the seed program and the
+  `EVOLVE-BLOCK` contract, the OpenRouter mutation call, and the sample/driver logic.
+- `ev_viz.py` — the diagrams and quizzes.
+
+`ev_viz.py` is not worth reading before the session, for the same reason as `lc_viz.py` above.

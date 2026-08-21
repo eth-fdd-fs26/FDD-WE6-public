@@ -1,0 +1,200 @@
+{
+ "history": [
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return nn.Linear(2, 3)\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.SGD(model.parameters(), lr=0.05)\n\n# EVOLVE-BLOCK-END\n",
+   "score": 0.44743332300186156,
+   "generation": 0,
+   "parent": null,
+   "index": 0,
+   "metrics": {
+    "accuracy": 0.4483333230018616,
+    "params": 9
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 16)\n        self.relu = nn.ReLU()\n        self.fc2 = nn.Linear(16, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.relu(x)\n        x = self.fc2(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.Adam(model.parameters(), lr=0.01)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.4792666620969772,
+   "generation": 1,
+   "parent": 0,
+   "index": 1,
+   "metrics": {
+    "accuracy": 0.48916666209697723,
+    "params": 99
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 32)\n        self.relu = nn.ReLU()\n        self.fc2 = nn.Linear(32, 32)\n        self.relu2 = nn.ReLU()\n        self.fc3 = nn.Linear(32, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.relu(x)\n        x = self.fc2(x)\n        x = self.relu2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=1e-5)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.0,
+   "generation": 2,
+   "parent": 1,
+   "index": 2,
+   "metrics": {
+    "note": "1251 params \u2014 over the 500 cap"
+   },
+   "note": "1251 params \u2014 over the 500 cap"
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 8)\n        self.relu = nn.ReLU()\n        self.fc2 = nn.Linear(8, 8)\n        self.relu2 = nn.ReLU()\n        self.fc3 = nn.Linear(8, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.relu(x)\n        x = self.fc2(x)\n        x = self.relu2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.Adam(model.parameters(), lr=0.01)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.5193666662693024,
+   "generation": 3,
+   "parent": 1,
+   "index": 3,
+   "metrics": {
+    "accuracy": 0.5316666662693024,
+    "params": 123
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 16)\n        self.elu = nn.ELU()\n        self.fc2 = nn.Linear(16, 16)\n        self.elu2 = nn.ELU()\n        self.fc3 = nn.Linear(16, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.elu(x)\n        x = self.fc2(x)\n        x = self.elu2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.AdamW(model.parameters(), lr=0.005, weight_decay=1e-4)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.44873333194255827,
+   "generation": 4,
+   "parent": 3,
+   "index": 4,
+   "metrics": {
+    "accuracy": 0.4858333319425583,
+    "params": 371
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 24)\n        self.tanh = nn.Tanh()\n        self.fc2 = nn.Linear(24, 24)\n        self.tanh2 = nn.Tanh()\n        self.fc3 = nn.Linear(24, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.tanh(x)\n        x = self.fc2(x)\n        x = self.tanh2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.Adam(model.parameters(), lr=0.008, weight_decay=1e-5)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.0,
+   "generation": 5,
+   "parent": 3,
+   "index": 5,
+   "metrics": {
+    "note": "747 params \u2014 over the 500 cap"
+   },
+   "note": "747 params \u2014 over the 500 cap"
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 10)\n        self.tanh = nn.Tanh()\n        self.fc2 = nn.Linear(10, 10)\n        self.tanh2 = nn.Tanh()\n        self.fc3 = nn.Linear(10, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.tanh(x)\n        x = self.fc2(x)\n        x = self.tanh2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.Adam(model.parameters(), lr=0.01)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.5776999988079071,
+   "generation": 6,
+   "parent": 0,
+   "index": 6,
+   "metrics": {
+    "accuracy": 0.5949999988079071,
+    "params": 173
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 12)\n        self.relu = nn.ReLU()\n        self.fc2 = nn.Linear(12, 12)\n        self.relu2 = nn.ReLU()\n        self.fc3 = nn.Linear(12, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.relu(x)\n        x = self.fc2(x)\n        x = self.relu2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.AdamW(model.parameters(), lr=0.005, weight_decay=1e-5)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.5177333539962768,
+   "generation": 7,
+   "parent": 4,
+   "index": 7,
+   "metrics": {
+    "accuracy": 0.5408333539962769,
+    "params": 231
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 12)\n        self.tanh = nn.Tanh()\n        self.fc2 = nn.Linear(12, 12)\n        self.tanh2 = nn.Tanh()\n        self.fc3 = nn.Linear(12, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.tanh(x)\n        x = self.fc2(x)\n        x = self.tanh2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.AdamW(model.parameters(), lr=0.005, weight_decay=1e-5)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.41106665494441985,
+   "generation": 8,
+   "parent": 4,
+   "index": 8,
+   "metrics": {
+    "accuracy": 0.43416665494441986,
+    "params": 231
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 16)\n        self.softplus = nn.Softplus()\n        self.fc2 = nn.Linear(16, 16)\n        self.softplus2 = nn.Softplus()\n        self.fc3 = nn.Linear(16, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.softplus(x)\n        x = self.fc2(x)\n        x = self.softplus2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.Adam(model.parameters(), lr=0.005)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.3945666722297668,
+   "generation": 9,
+   "parent": 6,
+   "index": 9,
+   "metrics": {
+    "accuracy": 0.43166667222976685,
+    "params": 371
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 12)\n        self.tanh = nn.Tanh()\n        self.fc2 = nn.Linear(12, 12)\n        self.tanh2 = nn.Tanh()\n        self.fc3 = nn.Linear(12, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.tanh(x)\n        x = self.fc2(x)\n        x = self.tanh2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.Adam(model.parameters(), lr=0.008)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.5294000095367432,
+   "generation": 10,
+   "parent": 4,
+   "index": 10,
+   "metrics": {
+    "accuracy": 0.5525000095367432,
+    "params": 231
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 12)\n        self.softplus = nn.Softplus()\n        self.fc2 = nn.Linear(12, 12)\n        self.softplus2 = nn.Softplus()\n        self.fc3 = nn.Linear(12, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.softplus(x)\n        x = self.fc2(x)\n        x = self.softplus2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.AdamW(model.parameters(), lr=0.01, weight_decay=1e-5)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.3685666656732559,
+   "generation": 11,
+   "parent": 4,
+   "index": 11,
+   "metrics": {
+    "accuracy": 0.3916666656732559,
+    "params": 231
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 16)\n        self.softplus = nn.Softplus()\n        self.fc2 = nn.Linear(16, 16)\n        self.softplus2 = nn.Softplus()\n        self.fc3 = nn.Linear(16, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.softplus(x)\n        x = self.fc2(x)\n        x = self.softplus2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.Adam(model.parameters(), lr=0.01)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.3804000041723251,
+   "generation": 12,
+   "parent": 6,
+   "index": 12,
+   "metrics": {
+    "accuracy": 0.41750000417232513,
+    "params": 371
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 16)\n        self.gelu = nn.GELU()\n        self.fc2 = nn.Linear(16, 16)\n        self.gelu2 = nn.GELU()\n        self.fc3 = nn.Linear(16, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.gelu(x)\n        x = self.fc2(x)\n        x = self.gelu2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.AdamW(model.parameters(), lr=0.005, weight_decay=1e-5)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.66623331823349,
+   "generation": 13,
+   "parent": 6,
+   "index": 13,
+   "metrics": {
+    "accuracy": 0.70333331823349,
+    "params": 371
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 16)\n        self.tanh = nn.Tanh()\n        self.fc2 = nn.Linear(16, 16)\n        self.tanh2 = nn.Tanh()\n        self.fc3 = nn.Linear(16, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.tanh(x)\n        x = self.fc2(x)\n        x = self.tanh2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.AdamW(model.parameters(), lr=0.005, weight_decay=1e-4)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.49956666150093076,
+   "generation": 14,
+   "parent": 13,
+   "index": 14,
+   "metrics": {
+    "accuracy": 0.5366666615009308,
+    "params": 371
+   },
+   "note": ""
+  },
+  {
+   "code": "import torch\nimport torch.nn as nn\n\n# EVOLVE-BLOCK-START\nclass SpiralClassifier(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(2, 16)\n        self.tanh = nn.Tanh()\n        self.fc2 = nn.Linear(16, 16)\n        self.tanh2 = nn.Tanh()\n        self.fc3 = nn.Linear(16, 3)\n\n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.tanh(x)\n        x = self.fc2(x)\n        x = self.tanh2(x)\n        x = self.fc3(x)\n        return x\n\ndef build_model():\n    \"\"\"Return an nn.Module mapping (batch, 2) inputs to (batch, 3) logits.\"\"\"\n    return SpiralClassifier()\n\n\ndef build_optimizer(model):\n    \"\"\"Return a torch optimizer for the model's parameters.\"\"\"\n    return torch.optim.AdamW(model.parameters(), lr=0.01, weight_decay=1e-5)\n# EVOLVE-BLOCK-END\n",
+   "score": 0.6945666841506958,
+   "generation": 15,
+   "parent": 0,
+   "index": 15,
+   "metrics": {
+    "accuracy": 0.7316666841506958,
+    "params": 371
+   },
+   "note": ""
+  }
+ ],
+ "archive_keys": [
+  0,
+  1,
+  3,
+  2
+ ]
+}
