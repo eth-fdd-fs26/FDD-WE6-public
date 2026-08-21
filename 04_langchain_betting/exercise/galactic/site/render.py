@@ -65,8 +65,14 @@ def page_shell(title: str, body: str, *, brand: str, mark: str, tagline: str,
 
 
 def _logo(team: str, big: bool = False) -> str:
-    return (f'<span class="logo{" lg" if big else ""}" '
-            f'style="background:{C.TEAM_COLORS[team]}">{C.TEAM_GLYPH[team]}</span>')
+    """A club badge: the emblem on a disc ringed in the club's colour.
+
+    The art is a lockup with the club's name under the emblem, which is illegible at this size,
+    so ``temp/_build_logos.py`` crops each one to the emblem and squares it off. The image is
+    served from ``/logos``; the ring keeps the colour coding the rest of the site relies on.
+    """
+    return (f'<span class="logo{" lg" if big else ""}" style="--team:{C.TEAM_COLORS[team]}">'
+            f'<img src="/logos/{C.TEAM_LOGO[team]}" alt="{escape(team)}" loading="lazy"></span>')
 
 
 def _team_cell(team: str) -> str:
@@ -340,10 +346,11 @@ def betting_page(t, path: str = "bracket", query: dict | None = None,
 # ===================================================================== the tabloid
 def _article_html(a: dict) -> str:
     tags = "".join(f"<span>{escape(x)}</span>" for x in a["tags"])
-    team = f' · {escape(a["team"])}' if a["team"] else ""
     paras = "".join(f"<p>{escape(' '.join(blk.split()))}</p>"
                     for blk in a["body"].split("\n\n") if blk.strip())
-    return (f'<article><div class="kicker">{a["id"]} · {a["date"]}{team}</div>'
+    byline = (f'<div class="byline">{_logo(a["team"])}<span>{escape(a["team"])}</span></div>'
+              if a["team"] else "")
+    return (f'<article>{byline}<div class="kicker">{a["id"]} · {a["date"]}</div>'
             f'<h2>{escape(a["headline"])}</h2>'
             f'<div class="stand">{escape(a["standfirst"])}</div>'
             f'<div class="text">{paras}</div>'

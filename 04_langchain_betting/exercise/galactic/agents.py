@@ -19,6 +19,8 @@ everything else held fixed, changes the transcript more than most prompt edits d
 
 from __future__ import annotations
 
+import re
+
 import json
 import os
 from dataclasses import dataclass, field
@@ -92,36 +94,45 @@ Work in this order, and do not skip the first step:
 2. Gather evidence with your other tools.
 3. Only then place bets, and only where you think the price is wrong.
 
+**How the tournament is shaped.** It runs over four betting rounds and then it is over. Each
+round's markets close the moment that round is settled, and they never reopen — a market you
+pass on today is gone tomorrow. Bankroll you never stake earns nothing: finishing with the
+money you started with is not a safe result, it is a wasted tournament. So a round with no bet
+in it has to be a decision you would defend, not the by-product of not having looked hard
+enough. When a price is wrong, back it.
+
 Never stake more than you have. Say what you are betting and why, in one sentence per bet."""
 
 PROMPTS = {
-    "value_hunter": """Round {round} of the Galactic Premier League playoffs is open and you
-have {wallet:.0f} {currency}.
+    "value_hunter": """Round {round} of {n_rounds} in the Galactic Premier League playoffs is
+open and you have {wallet:.0f} {currency}. {rounds_left_phrase}
 
 Find the mispriced selections and back them. Read the rules first, then research the clubs
 involved in the open markets, then bet. Stake between 5% and 20% of your bankroll per bet, and
 place no more than three bets. If you cannot find a price you think is wrong, place nothing
 and say so.""",
 
-    "favourites": """Round {round} is open and you have {wallet:.0f} {currency}. Back the
-favourite in every open market — the selection with the shortest odds — staking 10% of your
+    "favourites": """Round {round} of {n_rounds} is open and you have {wallet:.0f} {currency}.
+{rounds_left_phrase} Back the favourite in every open market — the selection with the shortest odds — staking 10% of your
 bankroll on each. Do not research anything.""",
 
-    "news_first": """Round {round} is open and you have {wallet:.0f} {currency}.
+    "news_first": """Round {round} of {n_rounds} is open and you have {wallet:.0f} {currency}.
+{rounds_left_phrase}
 
 Start with the news. Find every story about squad availability, work out which of them
 actually changes a side's strength and which is filler, then check whether the prices have
 moved to reflect it. Bet only where you think the market has under-reacted.""",
 
-    "cautious": """Round {round} is open and you have {wallet:.0f} {currency}.
+    "cautious": """Round {round} of {n_rounds} is open and you have {wallet:.0f} {currency}.
+{rounds_left_phrase}
 
 Be conservative. Research thoroughly, then place at most ONE bet, and only if you believe your
 own estimate of the probability beats the price implied by the odds by more than ten
 percentage points. Explain your estimate before you bet. If nothing clears that bar, bet
 nothing — that is a valid answer.""",
 
-    "hunch": """Round {round} is open and you have {wallet:.0f} {currency}. Look at the open
-markets and back whichever teams you like the sound of. Trust your instincts.""",
+    "hunch": """Round {round} of {n_rounds} is open and you have {wallet:.0f} {currency}.
+{rounds_left_phrase} Look at the open and back whichever teams you like the sound of. Trust your instincts.""",
 }
 
 PROMPT_LABELS = {
@@ -133,10 +144,35 @@ PROMPT_LABELS = {
 }
 
 
+#: ``{name}`` or ``{name:spec}``, and nothing else. A prompt is a participant's own text and
+#: routinely contains braces for innocent reasons — a JSON example, a set, a f-string they
+#: pasted — so we substitute the handful of fields we know about and leave every other brace
+#: exactly where it is. ``str.format`` would raise on all of them.
+_FIELD = re.compile(r"\{(\w+)(:[^{}]*)?\}")
+
+
 def render_prompt(key_or_text: str, tournament) -> str:
+    from .tournament import N_ROUNDS
+
     template = PROMPTS.get(key_or_text, key_or_text)
-    return template.format(round=tournament.round, wallet=tournament.wallet,
-                           currency=C.CURRENCY)
+    left = max(0, N_ROUNDS - tournament.round + 1)
+    phrase = {
+        0: "The tournament is over; there is nothing left to bet into.",
+        1: "This is the **last** betting round — after it settles there is nothing left to "
+           "bet into, so anything you do not stake now stays unstaked for good.",
+    }.get(left, f"Counting this one, you have {left} betting rounds left before the "
+                f"tournament is over.")
+    values = {"round": tournament.round, "n_rounds": N_ROUNDS, "rounds_left": left,
+              "rounds_left_phrase": phrase, "wallet": tournament.wallet,
+              "currency": C.CURRENCY}
+
+    def fill(m):
+        name, spec = m.group(1), (m.group(2) or "")[1:]
+        if name not in values:
+            return m.group(0)
+        return format(values[name], spec)
+
+    return _FIELD.sub(fill, template)
 
 
 # ===================================================================== the harnesses

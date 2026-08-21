@@ -15,10 +15,10 @@ from .. import config as C
 from ..tournament import DE8_GRAPH, GRAPH
 
 # Keep SLOT comfortably above CARD_H or first-round cards overlap each other.
-CARD_W = 200
+CARD_W = 244
 COL_GAP = 44
-CARD_H = 84
-SLOT = 102           # vertical pitch of one first-round match
+CARD_H = 96          # tag strip + two 38px rows: the badges are artwork now, not a glyph
+SLOT = 116           # vertical pitch of one first-round match
 BAND_GAP = 58
 TOP_PAD = 26
 
@@ -68,9 +68,9 @@ def _layout() -> tuple[dict, dict, float]:
 # ===================================================================== drawing
 def _logo(team: str | None) -> str:
     if not team:
-        return '<span class="logo" style="background:#262a35"></span>'
-    return (f'<span class="logo" style="background:{C.TEAM_COLORS[team]}">'
-            f'{C.TEAM_GLYPH[team]}</span>')
+        return '<span class="logo empty"></span>'
+    return (f'<span class="logo" style="--team:{C.TEAM_COLORS[team]}">'
+            f'<img src="/logos/{C.TEAM_LOGO[team]}" alt="" loading="lazy"></span>')
 
 
 def _side(slot: dict, side: str) -> str:
@@ -109,6 +109,35 @@ def _connectors(pos: dict) -> str:
     return "".join(paths)
 
 
+#: The tree is laid out in real pixels — cards, gaps and elbows all agree on one grid, which
+#: is what keeps the drawing honest. It is also 1,400-odd pixels wide, and the notebook shows
+#: it inside an iframe that is usually narrower than that. So the finished drawing is scaled
+#: down to whatever room it has: the whole tournament on one screen, no horizontal scrolling
+#: and no separate small-screen layout to keep in step with the big one. Below ``MIN_SCALE`` we
+#: stop shrinking and let it scroll, because unreadable is worse than partly visible.
+_FIT_JS = """<script>
+(function(){
+  var MIN = 0.62;
+  function fit(box){
+    var w = +box.dataset.w, h = +box.dataset.h;
+    var avail = box.parentNode.clientWidth;
+    if(!avail || !w){ return; }
+    var k = Math.min(1, Math.max(MIN, avail / w));
+    box.firstElementChild.style.transformOrigin = "top left";
+    box.firstElementChild.style.transform = k < 1 ? "scale(" + k + ")" : "";
+    box.style.width  = Math.ceil(w * k) + "px";
+    box.style.height = Math.ceil(h * k) + "px";
+  }
+  function all(){
+    Array.prototype.forEach.call(document.querySelectorAll(".bracket-fit"), fit);
+  }
+  all();
+  window.addEventListener("resize", all);
+  if(window.ResizeObserver){ new ResizeObserver(all).observe(document.body); }
+})();
+</script>"""
+
+
 def render_bracket(slots: list[dict]) -> str:
     pos, bands, height = _layout()
     by_id = {s["match_id"]: s for s in slots}
@@ -117,7 +146,8 @@ def render_bracket(slots: list[dict]) -> str:
     for mid, (x, y) in pos.items():
         s = by_id[mid]
         cards.append(
-            f'<div class="m {s["status"]}" style="left:{x}px;top:{y + TOP_PAD}px">'
+            f'<div class="m {s["status"]}" '
+            f'style="left:{x}px;top:{y + TOP_PAD}px;width:{CARD_W}px">'
             f'<div class="tag"><span class="id">{mid}</span> · {escape(s["round_label"])}'
             f'{" · LIVE" if s["status"] == "live" else ""}</div>'
             f'{_side(s, "a")}{_side(s, "b")}</div>')
@@ -130,7 +160,9 @@ def render_bracket(slots: list[dict]) -> str:
                           f'top:{info["label_y"] + 6}px">{escape(label)}</div>')
 
     width = max(x for x, _y in pos.values()) + CARD_W + 20
-    return (f'<div class="bracket-scroll"><div class="bracket" '
-            f'style="width:{width}px;height:{height + 20}px">'
-            f'<svg width="{width}" height="{height + 20}">{_connectors(pos)}</svg>'
-            f'{"".join(labels)}{"".join(cards)}</div></div>')
+    total_h = height + 20
+    return (f'<div class="bracket-scroll"><div class="bracket-fit" '
+            f'data-w="{width}" data-h="{total_h}">'
+            f'<div class="bracket" style="width:{width}px;height:{total_h}px">'
+            f'<svg width="{width}" height="{total_h}">{_connectors(pos)}</svg>'
+            f'{"".join(labels)}{"".join(cards)}</div></div></div>{_FIT_JS}')

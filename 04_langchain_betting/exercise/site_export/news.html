@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StarScoop</title><style>/* One theme, both sites. The betting site and the tabloid are the same product with
+   different content — the previous edition rendered them in two unrelated styles and it
+   showed. Also used by the notebook's rulebook view and the live agent trace. */
+
+:root {
+  --bg:        #0b0c10;
+  --panel:     #14161c;
+  --panel-2:   #1a1d25;
+  --panel-3:   #21252f;
+  --line:      #272b36;
+  --line-soft: #1e222b;
+  --text:      #e9ebf1;
+  --muted:     #8b93a7;
+  --dim:       #5d6479;
+  --accent:    #4c8dff;
+  --accent-2:  #8b5cf6;
+  --win:       #34d399;
+  --loss:      #f4566d;
+  --gold:      #fbbf4c;
+  --radius:    10px;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------------ chrome */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; gap: 18px;
+  padding: 0 22px; height: 56px;
+  background: rgba(11, 12, 16, .92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; }
+.brand .mark {
+  width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  font-size: 14px;
+}
+.brand small { color: var(--dim); font-weight: 500; font-size: 11px; letter-spacing: .04em;
+               text-transform: uppercase; }
+
+.tabs { display: flex; gap: 2px; margin-left: 8px; }
+.tabs a {
+  padding: 7px 13px; border-radius: 7px; color: var(--muted);
+  font-size: 13px; font-weight: 600;
+}
+.tabs a:hover { background: var(--panel-2); color: var(--text); text-decoration: none; }
+.tabs a.on { background: var(--panel-3); color: var(--text); }
+
+.spacer { flex: 1; }
+
+.wallet {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--panel-2); border: 1px solid var(--line);
+}
+.wallet .amt { font-family: var(--mono); font-weight: 700; color: var(--gold); }
+.wallet .lbl { color: var(--dim); font-size: 11px; text-transform: uppercase;
+               letter-spacing: .06em; }
+
+.roundpill {
+  padding: 5px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+  background: rgba(76, 141, 255, .12); color: var(--accent);
+  border: 1px solid rgba(76, 141, 255, .3);
+}
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 22px; }
+.grid { display: grid; grid-template-columns: 1fr 320px; gap: 18px; align-items: start; }
+@media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+/* ------------------------------------------------------------------ cards */
+.card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); overflow: hidden; margin-bottom: 18px;
+}
+.card > header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px; border-bottom: 1px solid var(--line-soft);
+  font-size: 13px; font-weight: 700; letter-spacing: .02em;
+}
+.card > header .sub { color: var(--dim); font-weight: 500; font-size: 12px; }
+.card .body { padding: 16px; }
+.card .body.flush { padding: 0; }
+
+/* ------------------------------------------------------------------ teams */
+/* The badge: a disc, a ring in the club's colour, the emblem inside it. Wider than a text
+   glyph needed to be, because now there is artwork in there worth looking at. */
+.logo {
+  width: 34px; height: 34px; border-radius: 50%; flex: 0 0 34px;
+  display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(circle at 30% 25%, #ffffff, #e7e9f2);
+  box-shadow: inset 0 0 0 2px var(--team, var(--line)), 0 1px 3px rgba(0,0,0,.35);
+}
+.logo img { width: 100%; height: 100%; object-fit: contain; display: block;
+            transform: scale(1.12); }   /* the disc clips the square's corners anyway */
+.logo.empty { background: #20242e; box-shadow: inset 0 0 0 1px var(--line); }
+.logo.lg { width: 62px; height: 62px; flex-basis: 62px; }
+.team { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.team .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.abbr { font-family: var(--mono); font-weight: 700; letter-spacing: .04em; }
+
+/* ------------------------------------------------------------------ tables */
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700;
+  color: var(--dim); text-transform: uppercase; letter-spacing: .07em;
+  border-bottom: 1px solid var(--line-soft); white-space: nowrap;
+}
+td { padding: 10px 14px; border-bottom: 1px solid var(--line-soft); font-size: 13px; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--panel-2); }
+td.r, th.r { text-align: right; }
+.rank { color: var(--dim); font-family: var(--mono); width: 26px; }
+/* A player's name is an identifier, not prose: twelve numeric columns will happily squeeze
+   it onto three lines otherwise, and the news refers to these people by name. */
+td.pname { white-space: nowrap; font-weight: 600; }
+.seedline { border-bottom: 1px dashed var(--line) !important; }
+td.grp, th.grp { border-left: 1px solid var(--line); }
+
+.chip {
+  display: inline-grid; place-items: center; width: 18px; height: 18px;
+  border-radius: 4px; font-size: 10px; font-weight: 800; margin-right: 3px;
+}
+.chip.W { background: rgba(52,211,153,.16); color: var(--win); }
+.chip.D { background: rgba(139,147,167,.16); color: var(--muted); }
+.chip.L { background: rgba(244,86,109,.16); color: var(--loss); }
+
+.bar { height: 5px; border-radius: 3px; background: var(--panel-3); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); }
+
+/* ------------------------------------------------------------------ bracket */
+.bracket-scroll { overflow-x: auto; padding: 6px 16px 18px; }
+/* Wrapper the fit script scales; it owns the scaled size so nothing below it jumps. */
+.bracket-fit { position: relative; }
+.bracket { position: relative; }
+.bandlabel {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--dim); position: absolute; left: 0;
+}
+.collabel {
+  position: absolute; font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--dim);
+}
+.bracket svg { position: absolute; inset: 0; pointer-events: none; }
+.bracket svg path { fill: none; stroke: #333a4a; stroke-width: 1.5; }
+
+.m {
+  /* width is set inline, from bracket.py's CARD_W — the same number that lays the grid out */
+  position: absolute;
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 8px; overflow: hidden;
+}
+.m.live { border-color: rgba(76,141,255,.55); box-shadow: 0 0 0 1px rgba(76,141,255,.18); }
+.m.settled { opacity: .96; }
+.m .row {
+  display: flex; align-items: center; gap: 8px; padding: 6px 9px; font-size: 12.5px;
+  height: 38px;
+}
+.m .logo { width: 26px; height: 26px; flex-basis: 26px; box-shadow: inset 0 0 0 1.5px var(--team, var(--line)); }
+.m .abbr { font-size: 11px; color: var(--muted); }
+.m .row + .row { border-top: 1px solid var(--line-soft); }
+.m .row .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m .row .sc { font-family: var(--mono); font-weight: 700; color: var(--dim); }
+.m .row.won .nm { font-weight: 700; }
+.m .row.won .sc { color: var(--win); }
+.m .row.lost .nm, .m .row.lost .abbr { color: var(--dim); }
+.m .row.tbd .nm { color: var(--dim); font-style: italic; }
+.m .tag {
+  padding: 3px 10px; font-size: 9.5px; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim); background: var(--panel);
+  border-bottom: 1px solid var(--line-soft);
+}
+.m .tag .id { color: var(--accent); }
+
+/* ------------------------------------------------------------------ markets */
+.mkt { border-bottom: 1px solid var(--line-soft); padding: 14px 16px; }
+.mkt:last-child { border-bottom: none; }
+.mkt .head {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: .07em;
+  font-weight: 700;
+}
+.mkt .head .id { color: var(--accent); font-family: var(--mono); }
+.picks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.picks.one { grid-template-columns: 1fr; }
+.pick {
+  display: flex; align-items: center; gap: 9px; padding: 9px 11px;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+}
+.pick .nm { flex: 1; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap; }
+.pick .odds {
+  font-family: var(--mono); font-weight: 800; color: var(--gold); font-size: 13px;
+}
+.pick .imp { font-size: 10.5px; color: var(--dim); font-family: var(--mono); }
+
+.slip { display: flex; align-items: center; gap: 10px; padding: 11px 14px;
+        border-bottom: 1px solid var(--line-soft); }
+.slip:last-child { border-bottom: none; }
+.slip .meta { flex: 1; min-width: 0; }
+.slip .meta .t { font-size: 12.5px; font-weight: 600; }
+.slip .meta .s { font-size: 11px; color: var(--dim); }
+.slip .amt { font-family: var(--mono); font-weight: 700; font-size: 12.5px; }
+.badge {
+  font-size: 9.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 5px;
+}
+.badge.open { background: rgba(139,147,167,.14); color: var(--muted); }
+.badge.won  { background: rgba(52,211,153,.16); color: var(--win); }
+.badge.lost { background: rgba(244,86,109,.16); color: var(--loss); }
+
+.empty { padding: 26px 16px; text-align: center; color: var(--dim); font-size: 12.5px; }
+
+/* ------------------------------------------------------------------ tabloid */
+/* ------------------------------------------------------------------ StarScoop
+   The bookmaker is a trading terminal and looks like one. The tabloid is a tabloid: the same
+   components, the same spacing, but daylight, colour and a masthead that thinks rather a lot
+   of itself. Everything below is a re-skin — no page knows which of the two it is being. */
+body.scoop {
+  --bg:        #fdf4ff;
+  --panel:     #ffffff;
+  --panel-2:   #fbf1ff;
+  --panel-3:   #f3e7ff;
+  --line:      #ecd9f5;
+  --line-soft: #f5e9fb;
+  --text:      #1d1436;
+  --muted:     #6f5f8d;
+  --dim:       #9b8bb8;
+  --accent:    #d6237f;
+  --accent-2:  #7b3fe4;
+  --win:       #14a06a;
+  --loss:      #e0345f;
+  --gold:      #f0a020;
+  background:
+    radial-gradient(60rem 40rem at 12% -10%, #ffe6f7 0%, rgba(255,230,247,0) 60%),
+    radial-gradient(50rem 35rem at 92% 4%, #e2ecff 0%, rgba(226,236,255,0) 55%),
+    radial-gradient(40rem 30rem at 70% 88%, #fff2d9 0%, rgba(255,242,217,0) 60%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+}
+.scoop .topbar {
+  background: rgba(255,255,255,.82);
+  border-bottom: 1px solid var(--line);
+}
+.scoop .brand { color: var(--text); }
+.scoop .brand .mark { background: linear-gradient(135deg, #ff4d8d, #ffb03a); color: #fff; }
+.scoop .brand small { color: var(--dim); }
+
+.lede { padding: 30px 0 10px; border-bottom: 2px dashed var(--line); margin-bottom: 22px; }
+.lede h1 { font-size: 44px; letter-spacing: -0.03em; line-height: 1.02; }
+.scoop .lede h1 {
+  background: linear-gradient(100deg, #ff3d7f 0%, #b13cf0 45%, #2f7bff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 2px 18px rgba(177,60,240,.13);
+}
+.lede p { color: var(--muted); margin: 6px 0 18px; font-size: 13.5px; }
+.scoop .lede p::before { content: "✦ "; color: #ffb03a; }
+.searchbar { display: flex; gap: 8px; }
+.searchbar input {
+  flex: 1; padding: 11px 14px; border-radius: 999px; background: var(--panel);
+  border: 1px solid var(--line); color: var(--text); font-size: 13px; font-family: var(--sans);
+}
+.searchbar input:focus { outline: none; border-color: var(--accent-2);
+                         box-shadow: 0 0 0 4px rgba(123,63,228,.12); }
+.searchbar button {
+  padding: 11px 22px; border-radius: 999px; border: none; cursor: pointer;
+  background: linear-gradient(135deg, #ff4d8d, #7b3fe4); color: #fff;
+  font-weight: 800; font-size: 13px; letter-spacing: .02em;
+}
+.searchbar button:hover { filter: brightness(1.06); }
+
+article { padding: 18px 0; border-bottom: 1px solid var(--line-soft); }
+.scoop article {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+  padding: 18px 22px; margin-bottom: 14px;
+  box-shadow: 0 2px 14px rgba(123,63,228,.06);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.scoop article:hover { transform: translateY(-2px);
+                       box-shadow: 0 8px 26px rgba(123,63,228,.13); }
+article .kicker { font-size: 11px; color: var(--dim); font-family: var(--mono);
+                  letter-spacing: .05em; }
+.scoop article .kicker { color: #b0479b; font-weight: 700; }
+article h2 { font-size: 21px; margin: 5px 0 7px; letter-spacing: -0.015em; line-height: 1.25; }
+article .stand { color: var(--muted); font-size: 13.5px; margin-bottom: 10px; }
+.scoop article .stand { font-style: italic; }
+article .text { color: #c6cbd8; font-size: 14px; max-width: 68ch; }
+.scoop article .text { color: #33284d; }
+article .text p { margin: 0 0 11px; line-height: 1.62; }
+article .text p:last-child { margin-bottom: 0; }
+article .tags { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+article .tags span {
+  font-size: 10.5px; padding: 3px 10px; border-radius: 999px;
+  background: var(--panel-2); color: var(--dim); border: 1px solid var(--line);
+}
+.scoop article .tags span {
+  background: linear-gradient(135deg, #fff0f8, #f0eaff);
+  color: #7b3fe4; border-color: #eadcfb; font-weight: 700;
+}
+article .byline { display: flex; align-items: center; gap: 9px; margin-bottom: 9px;
+                 font-size: 12.5px; font-weight: 800; letter-spacing: .01em; }
+.scoop article .byline { color: #7b3fe4; }
+.scoop article .byline .logo { width: 30px; height: 30px; flex-basis: 30px; }
+.scoop .empty { color: var(--muted); }
+
+/* ------------------------------------------------------------------ rulebook */
+.rules { max-width: 860px; }
+.rules section { padding: 18px 0; border-bottom: 1px solid var(--line-soft); }
+.rules h3 { font-size: 15px; margin-bottom: 8px; }
+.rules h3 .no { color: var(--accent); font-family: var(--mono); margin-right: 8px; }
+.rules pre {
+  margin: 0; font-family: var(--sans); font-size: 13.5px; color: #c6cbd8;
+  white-space: pre-wrap; line-height: 1.6;
+}
+</style></head>
+<body class="scoop">
+<div class="topbar">
+  <div class="brand"><span class="mark">★</span>
+    <span>StarScoop<br><small>Galactic Premier League</small></span></div>
+  <nav class="tabs"></nav>
+  <div class="spacer"></div>
+  
+</div>
+<div class="wrap">
+  <div class="lede">
+    <h1>StarScoop</h1>
+    <p>Orbital gossip, transfer lies, and the occasional fact · since 2219</p>
+    <form class="searchbar" method="get" action="/">
+      <input name="q" value="" placeholder="Search the archive — try a club name, or 'injury'">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  <div style="color:var(--dim);font-size:12px;margin-bottom:4px" id="scoop-count">22 stories</div>
+  <article><div class="byline"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span>Andromeda Asteroids</span></div><div class="kicker">N11 · 2026-04-16</div><h2>BLITZ THUNDERCLAW&#x27;S NEW CREST IS DIVIDING THE PADDOCK</h2><div class="stand">Seventeen spines. Coral pink. Opinions are strong.</div><div class="text"><p>The Asteroids&#x27; captain arrived at the pre-playoff gala with a seventeen-spine coral crest and the paddock has talked about nothing else since. Merchandise partners are said to be delighted. Two team-mates are said to be not speaking to him.</p></div><div class="tags"><span>lifestyle</span></div></article><article><div class="byline"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span>Pulsar Pirates</span></div><div class="kicker">N12 · 2026-04-16</div><h2>MASCOT LAWSUIT ENTERS THIRD YEAR</h2><div class="stand">The Pirates&#x27; mascot and a licensing consortium remain deadlocked.</div><div class="text"><p>The long-running dispute over ownership of the Pulsar Pirates&#x27; mascot likeness has been adjourned again, this time to the autumn. Neither side would comment. The mascot, who is contractually forbidden from speaking, waved.</p></div><div class="tags"><span>business</span></div></article><article><div class="byline"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span>Pulsar Pirates</span></div><div class="kicker">N02 · 2026-04-15</div><h2>PIRATES LOSE TAVE RIVERMAW AND WEND SLIPBANK TO PROLONGED-TOUCH BANS</h2><div class="stand">Disciplinary panel confirms both reached the tournament threshold.</div><div class="text"><p>Tave Rivermaw and Wend Slipbank have both been suspended for the remainder of the competition after accumulating prolonged-touch offences past the tournament threshold.</p><p>Neither suspension is a surprise. The Pirates have carried the League&#x27;s worst discipline record all season and both players sit well above the 1.0-per-90 league average on the official record. What is a surprise is the timing — the panel sat two days before the playoff draw, and the club had reportedly expected the count to reset.</p></div><div class="tags"><span>availability</span><span>suspension</span><span>discipline</span></div></article><article><div class="byline"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span>Nebula Nomads</span></div><div class="kicker">N04 · 2026-04-15</div><h2>NOMADS INJURY CRISIS DEEPENS AS SIL PLUMEFALL JOINS GHAL SOOTHEVEIL ON SIDELINES</h2><div class="stand">TWO more Nomads ruled out. Is the season already over for the drifters?</div><div class="text"><p>Another grim morning at the Nomads&#x27; orbital base, where Sil Plumefall has followed Ghal Sootheveil onto the injury list ahead of the playoffs. That is two more names gone in a single week.</p><p>Club sources describe the mood as &quot;difficult&quot;. Our sources describe it as a crisis. Whether the head coach can hold a starting eleven together through a double-elimination bracket is now the question everyone in the paddock is asking.</p><p>(League record: both players made a combined four appearances this season.)</p></div><div class="tags"><span>availability</span><span>injury</span></div></article><article><div class="kicker">N13 · 2026-04-15</div><h2>ORBITAL CATERING SCANDAL: THE NUTRIENT PASTE IS BACK</h2><div class="stand">Players at three clubs have complained. Again.</div><div class="text"><p>The neutral orbital&#x27;s catering contractor has confirmed that the vanilla-analogue nutrient paste will return for the playoffs, overruling objections from at least three clubs. One senior player described it as &quot;an act of hostility&quot;.</p></div><div class="tags"><span>lifestyle</span></div></article><article><div class="byline"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span>Stellar Strikers</span></div><div class="kicker">N01 · 2026-04-14</div><h2>CARNAGE AT THE STRIKERS: PAX, LORN AND MIRR ALL OUT FOR THE PLAYOFFS</h2><div class="stand">Three first-choice starters ruled out after the coolant-line failure in training.</div><div class="text"><p>The Stellar Strikers will contest the playoffs without Pax Emberlin, Lorn Coronado or Mirr Flarewick, all three confirmed out for the remainder of the competition after Tuesday&#x27;s coolant-line failure at the Helios training complex.</p><p>It is difficult to overstate the size of this. The three are the club&#x27;s first, second and fourth highest-rated outfielders on the League&#x27;s published record, and between them they started every one of the Strikers&#x27; seven league fixtures. Their replacements come off a squad list that has barely featured this season.</p><p>The club&#x27;s public line is that &quot;the group is deeper than people think&quot;. The League&#x27;s own stat sheet, which anyone can pull up, does not obviously support that.</p></div><div class="tags"><span>availability</span><span>injury</span></div></article><article><div class="kicker">N14 · 2026-04-14</div><h2>ARE THE NOMADS AND THE QUEENS&#x27; MEDICAL CHIEF STILL TOGETHER?</h2><div class="stand">Sources say yes. Other sources say very much no.</div><div class="text"><p>The paddock&#x27;s most durable romance is once again the paddock&#x27;s most uncertain romance, following an ambiguous appearance at a charity function on Tuesday. Neither party responded to requests for comment, which is itself being read as a comment.</p></div><div class="tags"><span>lifestyle</span></div></article><article><div class="byline"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span>Cosmic Crusaders</span></div><div class="kicker">N03 · 2026-04-13</div><h2>RHO MANTLET OUT: CRUSADERS LOSE THEIR BEST TOUCH PLAYER</h2><div class="stand">Ligament damage to the primary manipulator. Season over.</div><div class="text"><p>Rho Mantlet will play no further part in the season. The Crusaders&#x27; highest-rated outfielder sustained ligament damage in the closing minutes of the final league fixture and has been ruled out of the playoffs entirely.</p><p>The Crusaders finished the regular season comfortably in the top half, but they have won one of their last four and the scrim block has not been kind either. Losing their best receiver on top of that is not the week they wanted.</p></div><div class="tags"><span>availability</span><span>injury</span></div></article><article><div class="kicker">N15 · 2026-04-13</div><h2>TICKET PRICES FOR THE GRAND FINAL UP 22%</h2><div class="stand">Supporters&#x27; associations are furious. The League is unmoved.</div><div class="text"><p>Grand Final seating has been repriced upward for the fourth consecutive season. The League points to demand. Supporters&#x27; associations point to the League.</p></div><div class="tags"><span>business</span></div></article><article><div class="byline"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span>Meteor Mavericks</span></div><div class="kicker">N05 · 2026-04-12</div><h2>MAVERICKS&#x27; NEW COACH HAS QUIETLY TURNED THEM INTO SOMETHING ELSE</h2><div class="stand">Four months in, the hexapods are playing the best football in the league. The table has not caught up.</div><div class="text"><p>Nobody paid much attention when the Meteor Mavericks changed coach mid-season. They were bottom half, they had lost four in a row, and the appointment was made without a press conference.</p><p>Since then, a closed-doors block that has embarrassed sides well above them: 1 win, 1 draw and 8 defeats from 10. The new regime has rebuilt the whole side around receiving and releasing inside the touch window, and against live opposition it is working.</p><p>The league table, which sums the whole season and cannot tell an early point from a late one, still says 5th. The last month says something completely different. Which of the two a bookmaker prices is, as ever, the interesting question.</p></div><div class="tags"><span>form</span><span>coaching</span></div></article><article><div class="byline"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span>Stellar Strikers</span></div><div class="kicker">N16 · 2026-04-12</div><h2>STRIKERS UNVEIL FOURTH KIT. IT IS GOLD.</h2><div class="stand">It is extremely gold.</div><div class="text"><p>The Stellar Strikers have released a fourth-choice kit in full metallic gold, to be worn &quot;on selected occasions&quot;. Early reaction has been mixed, in the sense that it has been negative.</p></div><div class="tags"><span>lifestyle</span><span>business</span></div></article><article><div class="byline"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span>Cosmic Crusaders</span></div><div class="kicker">N06 · 2026-04-11</div><h2>CRUSADERS IN FREEFALL: &#x27;WE&#x27;VE STOPPED DOING THE BASICS&#x27;</h2><div class="stand">One win in four and a scrim block to forget.</div><div class="text"><p>Cosmic Crusaders&#x27; captain admitted after the final league fixture that the side has &quot;stopped doing the basics&quot;, pointing to a league run of D-L-W-D (newest first) and a closed-doors block of 4 wins, 3 draws and 3 defeats from 10.</p><p>They finished 3th, which flatters a team that banked most of its points before the midpoint. Nobody in the paddock thinks they are the side that started the season.</p></div><div class="tags"><span>form</span></div></article><article><div class="byline"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span>Galaxy Giants</span></div><div class="kicker">N17 · 2026-04-11</div><h2>TRANSFER RUMOUR: GIANTS &#x27;MONITORING&#x27; HALF THE LEAGUE</h2><div class="stand">An agent has been busy.</div><div class="text"><p>Galaxy Giants are reported to be monitoring at least six players across four rival clubs ahead of the close season. The same report last year named nine players, of whom the Giants signed none.</p></div><div class="tags"><span>transfers</span></div></article><article><div class="byline"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span>Andromeda Asteroids</span></div><div class="kicker">N07 · 2026-04-10</div><h2>ASTEROIDS TAKE THE TITLE — BUT NOBODY IS TALKING ABOUT THEM</h2><div class="stand">League winners on points, and still not favourites with the layers.</div><div class="text"><p>Andromeda Asteroids finished top on 19 points, a return that would ordinarily make a side clear playoff favourites. The market disagrees, and the Asteroids are being sent off behind the Strikers in most books.</p><p>Their supporters point to the table. Their detractors point out that they were beaten twice by sides in the bottom half and that a seven-match season is a seven-match season.</p></div><div class="tags"><span>form</span><span>table</span></div></article><article><div class="byline"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span>Cosmic Crusaders</span></div><div class="kicker">N18 · 2026-04-10</div><h2>CRUSADERS FAN CLUB VOTES TO CHANGE ANTHEM KEY</h2><div class="stand">A two-year campaign concludes in E flat.</div><div class="text"><p>After two years of lobbying, the Cosmic Crusaders supporters&#x27; association has voted to lower the club anthem by a full tone, citing &quot;widespread respiratory incompatibility&quot; among the membership.</p></div><div class="tags"><span>lifestyle</span></div></article><article><div class="byline"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span>Galaxy Giants</span></div><div class="kicker">N08 · 2026-04-09</div><h2>&#x27;THEY&#x27;LL SNAP LIKE KINDLING&#x27;: GIANTS COACH RELISHES PHYSICAL MISMATCH</h2><div class="stand">Galaxy Giants average 312 kg. Their first-round opponents average 74 kg.</div><div class="text"><p>Galaxy Giants&#x27; coach was in no mood for diplomacy at the pre-playoff media session, promising that lighter opponents would &quot;snap like kindling&quot; once the bracket got going.</p><p>The numbers behind the boast are real enough. The Giants field the heaviest and strongest squad in the League&#x27;s published record by a distance — six-limbed low-gravity specialists, none under 250 kg, several over 350.</p><p>Whether that translates into anything on the field is a question the Giants&#x27; supporters have been asked all season, and one they have yet to answer with a league position.</p></div><div class="tags"><span>physical</span><span>quotes</span></div></article><article><div class="kicker">N19 · 2026-04-09</div><h2>ASTROLOGER PREDICTS &#x27;A SIDE IN PURPLE&#x27; WILL LIFT THE TROPHY</h2><div class="stand">Three sides play in purple.</div><div class="text"><p>The paddock&#x27;s resident astrologer has once again declined to name a winner, offering instead that &quot;a side in purple, or possibly adjacent to purple&quot; will take the title. Three clubs qualify. Four, if you are generous about the Nomads&#x27; away kit.</p></div><div class="tags"><span>lifestyle</span></div></article><article><div class="byline"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span>Quasar Queens</span></div><div class="kicker">N09 · 2026-04-08</div><h2>THE LIGHTEST SQUAD IN THE LEAGUE — AND THE ONE NOBODY WANTS TO DRAW</h2><div class="stand">Quasar Queens are physically the smallest side in the competition. It has not stopped them.</div><div class="text"><p>On paper the Quasar Queens look like they should be brushed aside. The cephaloid side carries the lowest raw strength, the lowest average mass and the shortest reach in the League&#x27;s published record — comfortably last on all three.</p><p>They also have the best hands in the competition. Every one of their outfielders is rated above the League median for touch quality and first-touch control, and their prolonged-touch count is the lowest in the division by some way.</p><p>&quot;People look at the strength column and stop reading,&quot; their captain said this week. &quot;That column is the one the protocols take away. Nobody wants to hear it.&quot;</p></div><div class="tags"><span>physical</span><span>quotes</span></div></article><article><div class="kicker">N20 · 2026-04-08</div><h2>LEAGUE CONFIRMS PLAYOFF BALL WILL BE THE SAME PLAYOFF BALL</h2><div class="stand">A statement nobody asked for.</div><div class="text"><p>Following speculation, the League has confirmed that the match ball used in the playoffs will be identical in specification to the one used all season. The statement runs to four pages.</p></div><div class="tags"><span>business</span></div></article><article><div class="kicker">N10 · 2026-04-07</div><h2>XENOBIOLOGISTS PUBLISH 40-YEAR STUDY OF PRE-NORMALISATION MASS TRENDS</h2><div class="stand">Average registered player mass has risen 31% since 1986. Nobody can agree on why.</div><div class="text"><p>The Interworld Institute has published its four-decade review of registered player physiology, confirming that mean pre-normalisation mass across the League has risen 31% since 1986 while mean limb count has held steady at 2.8.</p><p>The Institute is careful to note that its data set is of biological interest only and has &quot;no established relationship with competitive outcomes in the post-protocol era&quot;. This has not stopped three separate member worlds from citing it in recruitment policy.</p></div><div class="tags"><span>physical</span><span>science</span></div></article><article><div class="byline"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span>Quasar Queens</span></div><div class="kicker">N21 · 2026-04-07</div><h2>QUEENS&#x27; NUTRITIONIST WRITES BESTSELLING COOKBOOK</h2><div class="stand">Forty recipes. Thirty-eight of them are brine.</div><div class="text"><p>The Quasar Queens&#x27; head of nutrition has topped the orbital bestseller list with a cookbook aimed at cephaloid households. Critics have noted that the recipes are, in the main, brine.</p></div><div class="tags"><span>lifestyle</span></div></article><article><div class="byline"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span>Meteor Mavericks</span></div><div class="kicker">N22 · 2026-04-06</div><h2>MAVERICKS TO TRIAL NEW TRAVEL SCHEDULE</h2><div class="stand">Departure moved four hours earlier. Squad reportedly &#x27;fine about it&#x27;.</div><div class="text"><p>Meteor Mavericks will depart for the neutral orbital four hours earlier than in previous seasons, a change the club describes as &quot;logistical&quot;. No player has commented, which the paddock has decided means something.</p></div><div class="tags"><span>logistics</span></div></article>
+</div>
+
+<script>
+(function(){
+  var form  = document.querySelector('.searchbar');
+  var input = form && form.querySelector('input');
+  var count = document.getElementById('scoop-count');
+  if(!form || !input){return;}
+  var arts = Array.prototype.slice.call(document.querySelectorAll('article'));
+  function apply(){
+    var words = input.value.toLowerCase().split(/[\s,]+/).filter(function(w){
+      return w.length > 2; });
+    var shown = 0;
+    arts.forEach(function(a){
+      var hay = a.textContent.toLowerCase();
+      var hit = words.every(function(w){ return hay.indexOf(w) >= 0; });
+      a.style.display = hit ? '' : 'none';
+      if(hit){ shown++; }
+    });
+    if(count){
+      count.textContent = words.length
+        ? shown + ' result' + (shown === 1 ? '' : 's') + ' for "' + input.value + '"'
+        : arts.length + ' stories';
+    }
+  }
+  form.addEventListener('submit', function(e){ e.preventDefault(); apply(); });
+  input.addEventListener('input', apply);
+})();
+</script>
+<div class="wrap" style="opacity:.62;font:600 12px system-ui;padding-bottom:26px"><a href="index.html" style="color:var(--accent, #4c8dff);text-decoration:none">◆ Index</a> · <a href="bracket.html" style="color:var(--accent, #4c8dff);text-decoration:none">GalacticBets.gg</a> · <a href="rulebook.html" style="color:var(--accent, #4c8dff);text-decoration:none">The rulebook</a> · <span style="color:#8b93a7">static snapshot — no bets can be placed</span></div>
+</body></html>

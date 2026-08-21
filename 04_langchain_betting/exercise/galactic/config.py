@@ -85,6 +85,10 @@ TEAM_GLYPH = {
     "Pulsar Pirates": "☠",
 }
 
+#: The club badges on the two websites. Files live in ``galactic/site/logos`` and are served
+#: at ``/logos/<file>``; ``TEAM_GLYPH`` above is still the fallback anywhere an image cannot go.
+TEAM_LOGO = {t: t.lower().replace(" ", "_") + ".png" for t in TEAMS}
+
 TEAM_SPECIES = {
     "Andromeda Asteroids": "Rock-silicate collectives",
     "Nebula Nomads": "Gas-phase drifters",
@@ -146,10 +150,14 @@ N_SCRIMS_PER_TEAM = 10
 
 # ----------------------------------------------------------------- the agent
 DEFAULT_MODEL = "google/gemini-3-flash-preview"
+#: Three models a participant can switch between in the launcher. Every one of these has to be
+#: a **live OpenRouter model id that supports tool calling** — a wrong id does not degrade, it
+#: returns `400 ... is not a valid model ID` in the middle of a run. Check one against
+#: <https://openrouter.ai/api/v1/models> before adding it.
 MODEL_CHOICES = [
     "google/gemini-3-flash-preview",
     "anthropic/claude-haiku-4.5",
-    "openai/gpt-5.1-mini",
+    "openai/gpt-5-mini",
 ]
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 DEFAULT_TEMPERATURE = 0.3

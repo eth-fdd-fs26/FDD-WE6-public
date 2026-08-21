@@ -265,7 +265,17 @@ def _markets(t, **_):
 
 
 def _wallet(t, **_):
-    return {"balance": t.wallet, "currency": C.CURRENCY, "round": t.round,
+    from .tournament import N_ROUNDS
+
+    left = max(0, N_ROUNDS - t.round + 1)
+    return {"balance": t.wallet, "currency": C.CURRENCY,
+            "round": t.round, "rounds_in_tournament": N_ROUNDS,
+            # including the round you are in. When this is 1, every market that is open now is
+            # the last one there will be: unstaked balance simply stays unstaked.
+            "betting_rounds_left": left,
+            "note": ("Markets close when their round is settled and never reopen."
+                     if left > 1 else
+                     "This is the final betting round — nothing opens after it."),
             "bets": t.bets()}
 
 

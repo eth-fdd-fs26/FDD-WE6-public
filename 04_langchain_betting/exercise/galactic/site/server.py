@@ -8,6 +8,7 @@ the notebook can be authored and rehearsed outside Colab.
 
 from __future__ import annotations
 
+import os
 import socket
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -46,12 +47,31 @@ class _Handler(BaseHTTPRequestHandler):
         query = {k: v[0] for k, v in parse_qs(u.query).items()}
         if u.path.strip("/") == "__state":
             return self._send(self.state_token(), "text/plain; charset=utf-8")
+        if u.path.startswith("/logos/"):
+            return self._send_logo(os.path.basename(u.path))
         try:
             html = self.render(u.path.strip("/") or "", query)
         except Exception as exc:                      # never take the notebook down
             html = (f"<pre style='color:#f4566d;background:#0b0c10;padding:20px;"
                     f"font-family:monospace'>{type(exc).__name__}: {exc}</pre>")
         self._send(html, "text/html; charset=utf-8")
+
+    def _send_logo(self, name: str):
+        """The club badges. Static bytes, cached hard: the bracket alone asks for sixteen."""
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logos", name)
+        if not name.endswith(".png") or not os.path.isfile(path):
+            self.send_response(404)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        with open(path, "rb") as fh:
+            body = fh.read()
+        self.send_response(200)
+        self.send_header("Content-Type", "image/png")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "public, max-age=86400")
+        self.end_headers()
+        self.wfile.write(body)
 
     def _send(self, text: str, content_type: str):
         body = text.encode("utf-8")
@@ -173,3 +193,51 @@ def open_news(tournament=None, height: int = 940):
 def open_sites(tournament, height: int = 940):
     """Both sites, one after the other."""
     return open_betting(tournament, height), open_news(tournament, height)
+
+
+def main(argv=None) -> None:
+    """Run both sites from a terminal and block until Ctrl-C.
+
+    The notebook calls ``open_betting``/``open_news``, which serve *and* embed. From a shell
+    there is nothing to embed into and nothing keeping the process alive, so this prints the
+    two URLs and waits.
+
+        python -m galactic.site.server --rounds 0
+    """
+    import argparse
+    import webbrowser
+    from ..tournament import Tournament
+
+    p = argparse.ArgumentParser(description="Serve GalacticBets.gg and StarScoop.")
+    p.add_argument("--rounds", type=int, default=0,
+                   help="settle this many rounds before serving (default: 0)")
+    p.add_argument("--open", action="store_true", help="open GalacticBets in a browser")
+    a = p.parse_args(argv)
+
+    t = Tournament()
+    for _ in range(a.rounds):
+        if t.finished:
+            break
+        t.advance_round(confirm="ADVANCE")
+
+    _BettingHandler.tournament = t
+    _NewsHandler.tournament = t
+    betting = _serve("betting", _BettingHandler)
+    news = _serve("news", _NewsHandler)
+    print(f"GalacticBets.gg  http://127.0.0.1:{betting}")
+    print(f"StarScoop        http://127.0.0.1:{news}")
+    print("Ctrl-C to stop.")
+    if a.open:
+        webbrowser.open(f"http://127.0.0.1:{betting}")
+    try:
+        for _t, thread, _p in list(_SERVERS.values()):
+            thread.join()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        stop()
+        print("\nStopped.")
+
+
+if __name__ == "__main__":
+    main()

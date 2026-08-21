@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GalacticBets · Scrims</title><style>/* One theme, both sites. The betting site and the tabloid are the same product with
+   different content — the previous edition rendered them in two unrelated styles and it
+   showed. Also used by the notebook's rulebook view and the live agent trace. */
+
+:root {
+  --bg:        #0b0c10;
+  --panel:     #14161c;
+  --panel-2:   #1a1d25;
+  --panel-3:   #21252f;
+  --line:      #272b36;
+  --line-soft: #1e222b;
+  --text:      #e9ebf1;
+  --muted:     #8b93a7;
+  --dim:       #5d6479;
+  --accent:    #4c8dff;
+  --accent-2:  #8b5cf6;
+  --win:       #34d399;
+  --loss:      #f4566d;
+  --gold:      #fbbf4c;
+  --radius:    10px;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------------ chrome */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; gap: 18px;
+  padding: 0 22px; height: 56px;
+  background: rgba(11, 12, 16, .92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; }
+.brand .mark {
+  width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  font-size: 14px;
+}
+.brand small { color: var(--dim); font-weight: 500; font-size: 11px; letter-spacing: .04em;
+               text-transform: uppercase; }
+
+.tabs { display: flex; gap: 2px; margin-left: 8px; }
+.tabs a {
+  padding: 7px 13px; border-radius: 7px; color: var(--muted);
+  font-size: 13px; font-weight: 600;
+}
+.tabs a:hover { background: var(--panel-2); color: var(--text); text-decoration: none; }
+.tabs a.on { background: var(--panel-3); color: var(--text); }
+
+.spacer { flex: 1; }
+
+.wallet {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--panel-2); border: 1px solid var(--line);
+}
+.wallet .amt { font-family: var(--mono); font-weight: 700; color: var(--gold); }
+.wallet .lbl { color: var(--dim); font-size: 11px; text-transform: uppercase;
+               letter-spacing: .06em; }
+
+.roundpill {
+  padding: 5px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+  background: rgba(76, 141, 255, .12); color: var(--accent);
+  border: 1px solid rgba(76, 141, 255, .3);
+}
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 22px; }
+.grid { display: grid; grid-template-columns: 1fr 320px; gap: 18px; align-items: start; }
+@media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+/* ------------------------------------------------------------------ cards */
+.card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); overflow: hidden; margin-bottom: 18px;
+}
+.card > header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px; border-bottom: 1px solid var(--line-soft);
+  font-size: 13px; font-weight: 700; letter-spacing: .02em;
+}
+.card > header .sub { color: var(--dim); font-weight: 500; font-size: 12px; }
+.card .body { padding: 16px; }
+.card .body.flush { padding: 0; }
+
+/* ------------------------------------------------------------------ teams */
+/* The badge: a disc, a ring in the club's colour, the emblem inside it. Wider than a text
+   glyph needed to be, because now there is artwork in there worth looking at. */
+.logo {
+  width: 34px; height: 34px; border-radius: 50%; flex: 0 0 34px;
+  display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(circle at 30% 25%, #ffffff, #e7e9f2);
+  box-shadow: inset 0 0 0 2px var(--team, var(--line)), 0 1px 3px rgba(0,0,0,.35);
+}
+.logo img { width: 100%; height: 100%; object-fit: contain; display: block;
+            transform: scale(1.12); }   /* the disc clips the square's corners anyway */
+.logo.empty { background: #20242e; box-shadow: inset 0 0 0 1px var(--line); }
+.logo.lg { width: 62px; height: 62px; flex-basis: 62px; }
+.team { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.team .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.abbr { font-family: var(--mono); font-weight: 700; letter-spacing: .04em; }
+
+/* ------------------------------------------------------------------ tables */
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700;
+  color: var(--dim); text-transform: uppercase; letter-spacing: .07em;
+  border-bottom: 1px solid var(--line-soft); white-space: nowrap;
+}
+td { padding: 10px 14px; border-bottom: 1px solid var(--line-soft); font-size: 13px; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--panel-2); }
+td.r, th.r { text-align: right; }
+.rank { color: var(--dim); font-family: var(--mono); width: 26px; }
+/* A player's name is an identifier, not prose: twelve numeric columns will happily squeeze
+   it onto three lines otherwise, and the news refers to these people by name. */
+td.pname { white-space: nowrap; font-weight: 600; }
+.seedline { border-bottom: 1px dashed var(--line) !important; }
+td.grp, th.grp { border-left: 1px solid var(--line); }
+
+.chip {
+  display: inline-grid; place-items: center; width: 18px; height: 18px;
+  border-radius: 4px; font-size: 10px; font-weight: 800; margin-right: 3px;
+}
+.chip.W { background: rgba(52,211,153,.16); color: var(--win); }
+.chip.D { background: rgba(139,147,167,.16); color: var(--muted); }
+.chip.L { background: rgba(244,86,109,.16); color: var(--loss); }
+
+.bar { height: 5px; border-radius: 3px; background: var(--panel-3); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); }
+
+/* ------------------------------------------------------------------ bracket */
+.bracket-scroll { overflow-x: auto; padding: 6px 16px 18px; }
+/* Wrapper the fit script scales; it owns the scaled size so nothing below it jumps. */
+.bracket-fit { position: relative; }
+.bracket { position: relative; }
+.bandlabel {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--dim); position: absolute; left: 0;
+}
+.collabel {
+  position: absolute; font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--dim);
+}
+.bracket svg { position: absolute; inset: 0; pointer-events: none; }
+.bracket svg path { fill: none; stroke: #333a4a; stroke-width: 1.5; }
+
+.m {
+  /* width is set inline, from bracket.py's CARD_W — the same number that lays the grid out */
+  position: absolute;
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 8px; overflow: hidden;
+}
+.m.live { border-color: rgba(76,141,255,.55); box-shadow: 0 0 0 1px rgba(76,141,255,.18); }
+.m.settled { opacity: .96; }
+.m .row {
+  display: flex; align-items: center; gap: 8px; padding: 6px 9px; font-size: 12.5px;
+  height: 38px;
+}
+.m .logo { width: 26px; height: 26px; flex-basis: 26px; box-shadow: inset 0 0 0 1.5px var(--team, var(--line)); }
+.m .abbr { font-size: 11px; color: var(--muted); }
+.m .row + .row { border-top: 1px solid var(--line-soft); }
+.m .row .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m .row .sc { font-family: var(--mono); font-weight: 700; color: var(--dim); }
+.m .row.won .nm { font-weight: 700; }
+.m .row.won .sc { color: var(--win); }
+.m .row.lost .nm, .m .row.lost .abbr { color: var(--dim); }
+.m .row.tbd .nm { color: var(--dim); font-style: italic; }
+.m .tag {
+  padding: 3px 10px; font-size: 9.5px; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim); background: var(--panel);
+  border-bottom: 1px solid var(--line-soft);
+}
+.m .tag .id { color: var(--accent); }
+
+/* ------------------------------------------------------------------ markets */
+.mkt { border-bottom: 1px solid var(--line-soft); padding: 14px 16px; }
+.mkt:last-child { border-bottom: none; }
+.mkt .head {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: .07em;
+  font-weight: 700;
+}
+.mkt .head .id { color: var(--accent); font-family: var(--mono); }
+.picks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.picks.one { grid-template-columns: 1fr; }
+.pick {
+  display: flex; align-items: center; gap: 9px; padding: 9px 11px;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+}
+.pick .nm { flex: 1; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap; }
+.pick .odds {
+  font-family: var(--mono); font-weight: 800; color: var(--gold); font-size: 13px;
+}
+.pick .imp { font-size: 10.5px; color: var(--dim); font-family: var(--mono); }
+
+.slip { display: flex; align-items: center; gap: 10px; padding: 11px 14px;
+        border-bottom: 1px solid var(--line-soft); }
+.slip:last-child { border-bottom: none; }
+.slip .meta { flex: 1; min-width: 0; }
+.slip .meta .t { font-size: 12.5px; font-weight: 600; }
+.slip .meta .s { font-size: 11px; color: var(--dim); }
+.slip .amt { font-family: var(--mono); font-weight: 700; font-size: 12.5px; }
+.badge {
+  font-size: 9.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 5px;
+}
+.badge.open { background: rgba(139,147,167,.14); color: var(--muted); }
+.badge.won  { background: rgba(52,211,153,.16); color: var(--win); }
+.badge.lost { background: rgba(244,86,109,.16); color: var(--loss); }
+
+.empty { padding: 26px 16px; text-align: center; color: var(--dim); font-size: 12.5px; }
+
+/* ------------------------------------------------------------------ tabloid */
+/* ------------------------------------------------------------------ StarScoop
+   The bookmaker is a trading terminal and looks like one. The tabloid is a tabloid: the same
+   components, the same spacing, but daylight, colour and a masthead that thinks rather a lot
+   of itself. Everything below is a re-skin — no page knows which of the two it is being. */
+body.scoop {
+  --bg:        #fdf4ff;
+  --panel:     #ffffff;
+  --panel-2:   #fbf1ff;
+  --panel-3:   #f3e7ff;
+  --line:      #ecd9f5;
+  --line-soft: #f5e9fb;
+  --text:      #1d1436;
+  --muted:     #6f5f8d;
+  --dim:       #9b8bb8;
+  --accent:    #d6237f;
+  --accent-2:  #7b3fe4;
+  --win:       #14a06a;
+  --loss:      #e0345f;
+  --gold:      #f0a020;
+  background:
+    radial-gradient(60rem 40rem at 12% -10%, #ffe6f7 0%, rgba(255,230,247,0) 60%),
+    radial-gradient(50rem 35rem at 92% 4%, #e2ecff 0%, rgba(226,236,255,0) 55%),
+    radial-gradient(40rem 30rem at 70% 88%, #fff2d9 0%, rgba(255,242,217,0) 60%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+}
+.scoop .topbar {
+  background: rgba(255,255,255,.82);
+  border-bottom: 1px solid var(--line);
+}
+.scoop .brand { color: var(--text); }
+.scoop .brand .mark { background: linear-gradient(135deg, #ff4d8d, #ffb03a); color: #fff; }
+.scoop .brand small { color: var(--dim); }
+
+.lede { padding: 30px 0 10px; border-bottom: 2px dashed var(--line); margin-bottom: 22px; }
+.lede h1 { font-size: 44px; letter-spacing: -0.03em; line-height: 1.02; }
+.scoop .lede h1 {
+  background: linear-gradient(100deg, #ff3d7f 0%, #b13cf0 45%, #2f7bff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 2px 18px rgba(177,60,240,.13);
+}
+.lede p { color: var(--muted); margin: 6px 0 18px; font-size: 13.5px; }
+.scoop .lede p::before { content: "✦ "; color: #ffb03a; }
+.searchbar { display: flex; gap: 8px; }
+.searchbar input {
+  flex: 1; padding: 11px 14px; border-radius: 999px; background: var(--panel);
+  border: 1px solid var(--line); color: var(--text); font-size: 13px; font-family: var(--sans);
+}
+.searchbar input:focus { outline: none; border-color: var(--accent-2);
+                         box-shadow: 0 0 0 4px rgba(123,63,228,.12); }
+.searchbar button {
+  padding: 11px 22px; border-radius: 999px; border: none; cursor: pointer;
+  background: linear-gradient(135deg, #ff4d8d, #7b3fe4); color: #fff;
+  font-weight: 800; font-size: 13px; letter-spacing: .02em;
+}
+.searchbar button:hover { filter: brightness(1.06); }
+
+article { padding: 18px 0; border-bottom: 1px solid var(--line-soft); }
+.scoop article {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+  padding: 18px 22px; margin-bottom: 14px;
+  box-shadow: 0 2px 14px rgba(123,63,228,.06);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.scoop article:hover { transform: translateY(-2px);
+                       box-shadow: 0 8px 26px rgba(123,63,228,.13); }
+article .kicker { font-size: 11px; color: var(--dim); font-family: var(--mono);
+                  letter-spacing: .05em; }
+.scoop article .kicker { color: #b0479b; font-weight: 700; }
+article h2 { font-size: 21px; margin: 5px 0 7px; letter-spacing: -0.015em; line-height: 1.25; }
+article .stand { color: var(--muted); font-size: 13.5px; margin-bottom: 10px; }
+.scoop article .stand { font-style: italic; }
+article .text { color: #c6cbd8; font-size: 14px; max-width: 68ch; }
+.scoop article .text { color: #33284d; }
+article .text p { margin: 0 0 11px; line-height: 1.62; }
+article .text p:last-child { margin-bottom: 0; }
+article .tags { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+article .tags span {
+  font-size: 10.5px; padding: 3px 10px; border-radius: 999px;
+  background: var(--panel-2); color: var(--dim); border: 1px solid var(--line);
+}
+.scoop article .tags span {
+  background: linear-gradient(135deg, #fff0f8, #f0eaff);
+  color: #7b3fe4; border-color: #eadcfb; font-weight: 700;
+}
+article .byline { display: flex; align-items: center; gap: 9px; margin-bottom: 9px;
+                 font-size: 12.5px; font-weight: 800; letter-spacing: .01em; }
+.scoop article .byline { color: #7b3fe4; }
+.scoop article .byline .logo { width: 30px; height: 30px; flex-basis: 30px; }
+.scoop .empty { color: var(--muted); }
+
+/* ------------------------------------------------------------------ rulebook */
+.rules { max-width: 860px; }
+.rules section { padding: 18px 0; border-bottom: 1px solid var(--line-soft); }
+.rules h3 { font-size: 15px; margin-bottom: 8px; }
+.rules h3 .no { color: var(--accent); font-family: var(--mono); margin-right: 8px; }
+.rules pre {
+  margin: 0; font-family: var(--sans); font-size: 13.5px; color: #c6cbd8;
+  white-space: pre-wrap; line-height: 1.6;
+}
+</style></head>
+<body class="">
+<div class="topbar">
+  <div class="brand"><span class="mark">◆</span>
+    <span>GalacticBets.gg<br><small>Galactic Premier League 2026</small></span></div>
+  <nav class="tabs"><a href="bracket.html" class="">Bracket</a><a href="matches.html" class="">Matches</a><a href="standings.html" class="">Standings</a><a href="teams.html" class="">Teams</a><a href="scrims.html" class="on">Scrims</a><a href="rules.html" class="">Rules</a><a href="bets.html" class="">My Bets</a></nav>
+  <div class="spacer"></div>
+  <span class="roundpill">Round 1 of 4</span><div class="wallet"><span class="lbl">Balance</span><span class="amt">1,000.00 GC</span></div>
+</div>
+<div class="wrap"><div class="card"><header>Scrim block<span class=sub>40 matches · 10 per side</span></header><div class="body"><div class="empty" style="text-align:left;padding:0 0 12px">Closed-doors matches played at full strength in the week before the playoffs. Not official fixtures. <b>Possession retention</b> is the share of contested touches a side kept inside the 1.2 s window.</div><table><thead><tr><th>ID</th><th>Home</th><th class=r>Score</th><th>Away</th><th class=r>Retention H</th><th class=r>Retention A</th></tr></thead><tbody><tr><td class="rank num">S000</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">4–3</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">62%</td><td class="num r">38%</td></tr><tr><td class="rank num">S001</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">1–1</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">18%</td><td class="num r">82%</td></tr><tr><td class="rank num">S002</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">3–3</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">59%</td><td class="num r">41%</td></tr><tr><td class="rank num">S003</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">1–2</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">70%</td><td class="num r">30%</td></tr><tr><td class="rank num">S004</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">3–2</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">58%</td><td class="num r">42%</td></tr><tr><td class="rank num">S005</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">3–1</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">79%</td><td class="num r">21%</td></tr><tr><td class="rank num">S006</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">4–4</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">53%</td><td class="num r">47%</td></tr><tr><td class="rank num">S007</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">1–3</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">41%</td><td class="num r">59%</td></tr><tr><td class="rank num">S008</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">3–3</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">20%</td><td class="num r">80%</td></tr><tr><td class="rank num">S009</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">1–0</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">71%</td><td class="num r">29%</td></tr><tr><td class="rank num">S010</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">1–3</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">55%</td><td class="num r">45%</td></tr><tr><td class="rank num">S011</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">0–3</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">26%</td><td class="num r">74%</td></tr><tr><td class="rank num">S012</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">2–0</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">18%</td><td class="num r">82%</td></tr><tr><td class="rank num">S013</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">1–3</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">26%</td><td class="num r">74%</td></tr><tr><td class="rank num">S014</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">0–0</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">32%</td><td class="num r">68%</td></tr><tr><td class="rank num">S015</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">4–1</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">21%</td><td class="num r">79%</td></tr><tr><td class="rank num">S016</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">5–2</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">58%</td><td class="num r">42%</td></tr><tr><td class="rank num">S017</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">1–2</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">30%</td><td class="num r">70%</td></tr><tr><td class="rank num">S018</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">3–2</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">26%</td><td class="num r">74%</td></tr><tr><td class="rank num">S019</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">1–4</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">46%</td><td class="num r">54%</td></tr><tr><td class="rank num">S020</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">3–2</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">50%</td><td class="num r">50%</td></tr><tr><td class="rank num">S021</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">4–2</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">52%</td><td class="num r">48%</td></tr><tr><td class="rank num">S022</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">2–2</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">34%</td><td class="num r">66%</td></tr><tr><td class="rank num">S023</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">1–3</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">25%</td><td class="num r">75%</td></tr><tr><td class="rank num">S024</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">1–2</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">74%</td><td class="num r">26%</td></tr><tr><td class="rank num">S025</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">5–1</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">69%</td><td class="num r">31%</td></tr><tr><td class="rank num">S026</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">2–2</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">50%</td><td class="num r">50%</td></tr><tr><td class="rank num">S027</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">2–3</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">22%</td><td class="num r">78%</td></tr><tr><td class="rank num">S028</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">5–2</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">53%</td><td class="num r">47%</td></tr><tr><td class="rank num">S029</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">3–7</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">18%</td><td class="num r">82%</td></tr><tr><td class="rank num">S030</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">4–4</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">79%</td><td class="num r">21%</td></tr><tr><td class="rank num">S031</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">2–3</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">72%</td><td class="num r">28%</td></tr><tr><td class="rank num">S032</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">2–4</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">55%</td><td class="num r">45%</td></tr><tr><td class="rank num">S033</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">1–2</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">82%</td><td class="num r">18%</td></tr><tr><td class="rank num">S034</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">2–1</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">37%</td><td class="num r">63%</td></tr><tr><td class="rank num">S035</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">0–1</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">38%</td><td class="num r">62%</td></tr><tr><td class="rank num">S036</td><td><div class="team"><span class="logo" style="--team:#e8813a"><img src="logos/andromeda_asteroids.png" alt="Andromeda Asteroids" loading="lazy"></span><span class="abbr">AND</span><span class="nm">Andromeda Asteroids</span></div></td><td class="num r">0–3</td><td><div class="team"><span class="logo" style="--team:#f2c14e"><img src="logos/stellar_strikers.png" alt="Stellar Strikers" loading="lazy"></span><span class="abbr">STL</span><span class="nm">Stellar Strikers</span></div></td><td class="num r">44%</td><td class="num r">56%</td></tr><tr><td class="rank num">S037</td><td><div class="team"><span class="logo" style="--team:#2fb8a4"><img src="logos/cosmic_crusaders.png" alt="Cosmic Crusaders" loading="lazy"></span><span class="abbr">CSM</span><span class="nm">Cosmic Crusaders</span></div></td><td class="num r">2–0</td><td><div class="team"><span class="logo" style="--team:#4a83ff"><img src="logos/galaxy_giants.png" alt="Galaxy Giants" loading="lazy"></span><span class="abbr">GXG</span><span class="nm">Galaxy Giants</span></div></td><td class="num r">80%</td><td class="num r">20%</td></tr><tr><td class="rank num">S038</td><td><div class="team"><span class="logo" style="--team:#e5546a"><img src="logos/meteor_mavericks.png" alt="Meteor Mavericks" loading="lazy"></span><span class="abbr">MTR</span><span class="nm">Meteor Mavericks</span></div></td><td class="num r">3–2</td><td><div class="team"><span class="logo" style="--team:#7c5cff"><img src="logos/nebula_nomads.png" alt="Nebula Nomads" loading="lazy"></span><span class="abbr">NEB</span><span class="nm">Nebula Nomads</span></div></td><td class="num r">44%</td><td class="num r">56%</td></tr><tr><td class="rank num">S039</td><td><div class="team"><span class="logo" style="--team:#4fbf5f"><img src="logos/pulsar_pirates.png" alt="Pulsar Pirates" loading="lazy"></span><span class="abbr">PLS</span><span class="nm">Pulsar Pirates</span></div></td><td class="num r">2–9</td><td><div class="team"><span class="logo" style="--team:#c45cd6"><img src="logos/quasar_queens.png" alt="Quasar Queens" loading="lazy"></span><span class="abbr">QSR</span><span class="nm">Quasar Queens</span></div></td><td class="num r">18%</td><td class="num r">82%</td></tr></tbody></table></div></div></div>
+
+<div class="wrap" style="opacity:.62;font:600 12px system-ui;padding-bottom:26px"><a href="index.html" style="color:var(--accent, #4c8dff);text-decoration:none">◆ Index</a> · <a href="bracket.html" style="color:var(--accent, #4c8dff);text-decoration:none">GalacticBets.gg</a> · <a href="news.html" style="color:var(--accent, #4c8dff);text-decoration:none">StarScoop</a> · <a href="rulebook.html" style="color:var(--accent, #4c8dff);text-decoration:none">The rulebook</a> · <span style="color:#8b93a7">static snapshot — no bets can be placed</span></div>
+</body></html>

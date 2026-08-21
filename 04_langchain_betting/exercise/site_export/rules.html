@@ -1,4 +1,7 @@
-/* One theme, both sites. The betting site and the tabloid are the same product with
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GalacticBets · Rules</title><style>/* One theme, both sites. The betting site and the tabloid are the same product with
    different content — the previous edition rendered them in two unrelated styles and it
    showed. Also used by the notebook's rulebook view and the live agent trace. */
 
@@ -333,3 +336,100 @@ article .byline { display: flex; align-items: center; gap: 9px; margin-bottom: 9
   margin: 0; font-family: var(--sans); font-size: 13.5px; color: #c6cbd8;
   white-space: pre-wrap; line-height: 1.6;
 }
+</style></head>
+<body class="">
+<div class="topbar">
+  <div class="brand"><span class="mark">◆</span>
+    <span>GalacticBets.gg<br><small>Galactic Premier League 2026</small></span></div>
+  <nav class="tabs"><a href="bracket.html" class="">Bracket</a><a href="matches.html" class="">Matches</a><a href="standings.html" class="">Standings</a><a href="teams.html" class="">Teams</a><a href="scrims.html" class="">Scrims</a><a href="rules.html" class="on">Rules</a><a href="bets.html" class="">My Bets</a></nav>
+  <div class="spacer"></div>
+  <span class="roundpill">Round 1 of 4</span><div class="wallet"><span class="lbl">Balance</span><span class="amt">1,000.00 GC</span></div>
+</div>
+<div class="wrap"><div class="card"><header>Laws of Intergalactic Football</header><div class="body flush"><style>
+.rulesdoc{color:#c6cbd8;font:14px/1.62 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.rulesdoc *{box-sizing:border-box}
+.rulesdoc .wrap{display:grid;grid-template-columns:212px 1fr;gap:0}
+/* ------------------------------------------------------------- rail */
+.rulesdoc .rail{position:sticky;align-self:start;overflow:auto;padding:18px 12px;
+  background:#0f1116;border-right:1px solid #272b36}
+.rulesdoc .crest{font-weight:800;font-size:13px;color:#e9ebf1;line-height:1.3;
+  letter-spacing:-.01em}
+.rulesdoc .crestsub{font-size:10.5px;color:#5d6479;letter-spacing:.08em;
+  text-transform:uppercase;margin:3px 0 14px}
+.rulesdoc .rail a{display:flex;gap:8px;align-items:baseline;padding:7px 9px;
+  border-radius:8px;text-decoration:none;color:#8b93a7;font-size:12.5px;line-height:1.35;
+  margin-bottom:2px;cursor:pointer}
+.rulesdoc .rail a .n{font:700 11px ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;color:#5d6479;flex:0 0 20px}
+.rulesdoc .rail a:hover{background:#1a1d25;color:#e9ebf1;text-decoration:none}
+.rulesdoc .rail a.on{background:rgba(76,141,255,.14);color:#4c8dff;font-weight:700}
+.rulesdoc .rail a.on .n{color:#4c8dff}
+.rulesdoc .railfoot{margin-top:16px;padding:10px;border-radius:9px;background:#14161c;
+  border:1px solid #272b36;font-size:11.5px;color:#8b93a7;line-height:1.55}
+/* ------------------------------------------------------------- content */
+.rulesdoc main{padding:22px 30px 60px;max-width:780px}
+.rulesdoc .lede{border-left:3px solid #8b5cf6;background:#1a1d25;
+  border-radius:0 10px 10px 0;padding:13px 16px;margin-bottom:26px;font-size:13px;
+  color:#c6cbd8}
+.rulesdoc .lede b{color:#e9ebf1}
+.rulesdoc section{padding:6px 0 26px}
+.rulesdoc section+section{border-top:1px solid #1e222b;padding-top:24px}
+.rulesdoc h2{margin:0;font-size:17px;color:#e9ebf1;letter-spacing:-.01em;display:flex;
+  gap:10px;align-items:center;font-weight:700}
+.rulesdoc h2 .no{font:800 11px ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;color:#4c8dff;background:rgba(76,141,255,.14);border-radius:6px;
+  padding:3px 8px;letter-spacing:.04em}
+.rulesdoc h2 .gl{font-size:15px}
+.rulesdoc .cap{color:#5d6479;font-size:12px;margin:5px 0 12px}
+.rulesdoc p{margin:0 0 12px}
+.rulesdoc .k{color:#e9ebf1;font-weight:700;letter-spacing:.01em}
+.rulesdoc .q{color:#8b5cf6;font-weight:700;background:rgba(76,141,255,.14);border-radius:5px;
+  padding:0 5px;font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;font-size:12.5px}
+/* ------------------------------------------------------------- components */
+.rulesdoc .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:10px;margin:4px 0 16px}
+.rulesdoc .fc{border:1px solid #272b36;border-radius:10px;padding:11px 13px;
+  background:#1a1d25}
+.rulesdoc .fh{font-size:12.5px;color:#e9ebf1;font-weight:700;margin-bottom:3px}
+.rulesdoc .ft{font-size:12px;color:#8b93a7;line-height:1.5}
+.rulesdoc .tw{border:1px solid #272b36;border-radius:10px;overflow:hidden;margin:4px 0 14px}
+.rulesdoc table{width:100%;border-collapse:collapse}
+.rulesdoc th{text-align:left;padding:9px 13px;font-size:10.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:#5d6479;background:#1a1d25;border-bottom:1px solid #272b36;
+  font-weight:800}
+.rulesdoc td{padding:8px 13px;border-bottom:1px solid #1e222b;font-size:12.5px;
+  vertical-align:top;color:#aeb5c6}
+.rulesdoc tbody tr:last-child td{border-bottom:none}
+.rulesdoc tbody tr:hover{background:transparent}
+.rulesdoc td.mono{font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;font-size:11.5px;color:#4c8dff;white-space:nowrap}
+.rulesdoc .rail{top:70px;height:auto}.rulesdoc section{scroll-margin-top:76px}</style><div class="rulesdoc"><div class="wrap">
+  <aside class="rail">
+    <div class="crest">Laws of<br>Intergalactic Football</div>
+    <div class="crestsub">GPL · 2026 edition</div>
+    <a data-go="s1"><span class="n">§1</span><span>The sides and the field</span></a><a data-go="s2"><span class="n">§2</span><span>Scoring</span></a><a data-go="s3"><span class="n">§3</span><span>Contact with the ball</span></a><a data-go="s4"><span class="n">§4</span><span>The normalisation protocols</span></a><a data-go="s5"><span class="n">§5</span><span>Fouls and discipline</span></a><a data-go="s6"><span class="n">§6</span><span>Competition format</span></a><a data-go="s7"><span class="n">§7</span><span>The official statistical record</span></a>
+    <div class="railfoot">Your agent reads this same text through its
+      <b>read_rules</b> tool — whole, or one section at a time.</div>
+  </aside>
+  <main><div class="lede"><b>Seven sections, four minutes.</b> Two of them change how a stat sheet reads, and the League does not say which two — it publishes the laws and the numbers and leaves the joining-up to you. The bookmaker has already done it.</div><section id="s1"><h2><span class="no">§1</span><span class="gl">🛰</span>The sides and the field</h2><div class="cap">The field, and how many things there are to defend.</div><p>Each side fields eleven players. Beyond that, species composition is unrestricted: a side may be entirely bipedal, entirely cephalopod, or any mixture.</p><p>The field carries <b class="k">FOUR</b> scoring structures. Each side defends two of them:</p><div class="cards"><div class="fc"><div class="fh"><b class="k">TWO GOALS</b></div><div class="ft">the wide, low structures at either end of the long axis.</div></div><div class="fc"><div class="fh"><b class="k">TWO NESTS</b></div><div class="ft">the narrow, elevated baskets at the corners of the defending half.</div></div></div><p>A side therefore has four things to protect and four things to attack, which is why teams carry three specialist nestkeepers and why a squad&#x27;s nest defence is a live concern rather than a rounding error.</p></section><section id="s2"><h2><span class="no">§2</span><span class="gl">◎</span>Scoring</h2><div class="cap">How a point is scored, and why nothing ends level.</div><p>A ball placed in an opposing <b class="k">GOAL</b> scores one point. A ball placed in an opposing <b class="k">NEST</b> scores one point. There is no distinction in value; the distinction is in difficulty, and in who on your squad is capable of preventing each.</p><p>Matches cannot end level. Playoff ties are replayed in sudden-death extra periods until a side leads, so every playoff fixture has a winner and there is no draw market.</p></section><section id="s3"><h2><span class="no">§3</span><span class="gl">✋</span>Contact with the ball</h2><div class="cap">What you may do with the ball, and for how long.</div><p>A player may contact the ball with <b class="k">ANY</b> part of their body. Hands, feet, tentacles, tails, mandibles, prehensile crests and gas-phase manifolds are all legal contact surfaces. There is no handball in Intergalactic Football and there never has been.</p><p>What is <b class="k">NOT</b> legal is <b class="k">PROLONGED TOUCH</b>. A player may strike, deflect, head, tap, volley or cushion the ball, but may not retain contact with it for longer than <b class="q">1.2 seconds</b>. Carrying, cradling, clutching, coiling around or gas-trapping the ball is prolonged touch, and it is a foul regardless of which appendage does it.</p><p>The consequence is that possession in this sport is a matter of <b class="k">TOUCH QUALITY</b>, not of grip strength. A side that can receive a hard pass cleanly and redirect it inside <b class="q">1.2 seconds</b> keeps the ball. A side that cannot, does not — no matter how large its players are.</p></section><section id="s4"><h2><span class="no">§4</span><span class="gl">⚖</span>The normalisation protocols</h2><div class="cap">What the League equalises before kick-off.</div><p>Because member species differ in physical scale by more than two orders of magnitude, the League applies <b class="k">NORMALISATION PROTOCOLS</b> to every player before kick-off. These are not handicaps applied to teams; they are per-player field adjustments applied inside the playing volume, and they are complete rather than partial.</p><p>The following attributes are equalised across all twenty-two players on the field:</p><div class="cards"><div class="fc"><div class="fh">raw strength</div></div><div class="fc"><div class="fh">body mass</div></div><div class="fc"><div class="fh">limb count and reach</div></div><div class="fc"><div class="fh">top sprint speed</div></div></div><p>After normalisation, a 340 kg six-limbed silicate collective and a 71 kg two-limbed cephaloid exert identical force, cover ground at identical speed, and present identical reach. This is why the League can run a single competition across species at all, and it is the reason the 1974 Giants Era ended.</p><p>The protocols do <b class="k">NOT</b> touch anything learned rather than inherited: touch quality, first-touch control, positional reading, nest defence, dead-ball technique, or discipline. Those remain entirely the player&#x27;s own.</p></section><section id="s5"><h2><span class="no">§5</span><span class="gl">🟨</span>Fouls and discipline</h2><div class="cap">What it costs to keep giving the ball away.</div><p>Prolonged touch is the most common foul in the sport. It concedes possession immediately, and in the defensive third it concedes a free strike from the nest line.</p><p>Prolonged-touch offences accumulate across the competition. A player reaching the threshold is suspended for the remainder of the tournament — which is why a side&#x27;s foul discipline is both a within-match cost and a squad-availability risk.</p><p>The League&#x27;s official statistic is <b class="k">PROLONGED-TOUCH FOULS PER 90 MINUTES</b>. League average is approximately <b class="q">1.0 per player per 90</b>.</p></section><section id="s6"><h2><span class="no">§6</span><span class="gl">🏆</span>Competition format</h2><div class="cap">Who plays whom, and how a title is won.</div><p>Eight sides contest a single round-robin regular season: every side plays every other side exactly once, seven matches each, no home-and-away. Three points for a win, one for a draw. Because every side plays the same seven opponents, the final table is directly comparable — though it is a seven-match sample, and it weights an early win exactly as heavily as a late one.</p><p>The top eight — that is, all of them — enter a <b class="k">DOUBLE-ELIMINATION</b> playoff seeded by final league position. A side is eliminated on its second defeat. Fourteen matches decide the title, and a side that loses early in the upper bracket can still win the whole thing from the lower bracket.</p><p>Playoff matches are held at a neutral orbital, so there is no home advantage in the playoffs.</p></section><section id="s7"><h2><span class="no">§7</span><span class="gl">📊</span>The official statistical record</h2><div class="cap">Everything the League prints about a player.</div><p>For every registered player the League publishes:</p><div class="tw"><table><thead><tr><th>published statistic</th><th>what the League says it measures</th></tr></thead><tbody><tr><td class="mono">ball_control</td><td>touch quality under pressure, 0-99</td></tr><tr><td class="mono">first_touch</td><td>control of a received ball inside the 1.2 s window, 0-99</td></tr><tr><td class="mono">nest_defence</td><td>effectiveness defending the elevated baskets, 0-99</td></tr><tr><td class="mono">set_piece</td><td>dead-ball technique, 0-99</td></tr><tr><td class="mono">prolonged_touch_fouls_per90</td><td>discipline, fouls per 90 minutes</td></tr><tr><td class="mono">raw_strength</td><td>pre-normalisation force output, 0-99</td></tr><tr><td class="mono">mass_kg</td><td>pre-normalisation body mass</td></tr><tr><td class="mono">limb_count</td><td>number of manipulating limbs</td></tr><tr><td class="mono">top_speed</td><td>pre-normalisation sprint speed, 0-99</td></tr></tbody></table></div><p>The League publishes all nine because member worlds request them and because pre-normalisation physical data remains of considerable interest to xenobiologists. The League makes no claim that all nine bear on the result of a match.</p><p>Closed-doors scrim results are published in aggregate one week before the playoffs. They are not official fixtures and carry no competitive weight, but they are played at full strength.</p></section></main>
+</div></div>
+<script>
+(function(){
+  const roots=document.querySelectorAll('.rulesdoc');
+  roots.forEach(root=>{
+    if(root.dataset.wired) return; root.dataset.wired='1';
+    const links=[...root.querySelectorAll('.rail a')];
+    const secs=links.map(a=>root.querySelector('#'+a.dataset.go));
+    links.forEach((a,i)=>a.addEventListener('click',e=>{
+      e.preventDefault();
+      if(secs[i]) secs[i].scrollIntoView({behavior:'smooth',block:'start'});
+    }));
+    function spy(){
+      let i=0;
+      secs.forEach((s,j)=>{ if(s && s.getBoundingClientRect().top < innerHeight*0.28) i=j; });
+      links.forEach((l,j)=>l.classList.toggle('on', j===i));
+    }
+    addEventListener('scroll',spy,{passive:true}); spy();
+  });
+})();
+</script></div></div></div>
+
+<div class="wrap" style="opacity:.62;font:600 12px system-ui;padding-bottom:26px"><a href="index.html" style="color:var(--accent, #4c8dff);text-decoration:none">◆ Index</a> · <a href="bracket.html" style="color:var(--accent, #4c8dff);text-decoration:none">GalacticBets.gg</a> · <a href="news.html" style="color:var(--accent, #4c8dff);text-decoration:none">StarScoop</a> · <a href="rulebook.html" style="color:var(--accent, #4c8dff);text-decoration:none">The rulebook</a> · <span style="color:#8b93a7">static snapshot — no bets can be placed</span></div>
+</body></html>
